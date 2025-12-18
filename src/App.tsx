@@ -5,7 +5,7 @@ import { renderEquation } from "./chem/renderEquation";
 
 
 export default function App() {
-  const [value, setValue] = useState("Cu(NO3)2 + 2 H2 -> 2 H2O");
+  const [value, setValue] = useState("Mg^2+ + 2e^- -> Mg");
   const previewRef = useRef<HTMLDivElement>(null);
 
 const preview = useMemo(() => {
