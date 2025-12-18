@@ -60,26 +60,41 @@ export function parseFormula(input: string): Node[] {
       continue;
     }
 
-    // Superscript: ^2+ oder ^{3+}
-    if (ch === "^") {
-      i++;
-      const br = readBraced(input, i);
-      if (br) {
-        out.push({ type: "sup", value: br.value });
-        i = br.next;
-        continue;
-      }
+// Superscript: ^2+, ^3-, e^-, SO_4^2-
+if (ch === "^") {
+  i++;
 
-      let sup = "";
-      while (i < input.length && /[0-9+\-]/.test(input[i])) sup += input[i++];
-      if (sup.length > 0) {
-        out.push({ type: "sup", value: sup });
-        continue;
-      }
+  // ^{...}
+  const br = readBraced(input, i);
+  if (br) {
+    out.push({ type: "sup", value: br.value });
+    i = br.next;
+    continue;
+  }
 
-      out.push({ type: "text", value: "^" });
-      continue;
-    }
+  // ^ gefolgt von Zahl(en) UND optionalem Vorzeichen
+  let sup = "";
+
+  // erst Ziffern
+  while (i < input.length && /[0-9]/.test(input[i])) {
+    sup += input[i++];
+  }
+
+  // dann optional + oder -
+  if (i < input.length && (input[i] === "+" || input[i] === "-")) {
+    sup += input[i++];
+  }
+
+  if (sup.length > 0) {
+    out.push({ type: "sup", value: sup });
+    continue;
+  }
+
+  // Fallback
+  out.push({ type: "text", value: "^" });
+  continue;
+}
+
 
     // Default: normaler Text
     out.push({ type: "text", value: ch });
