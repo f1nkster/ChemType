@@ -35,12 +35,6 @@ const [copyStatus, setCopyStatus] = useState<null | "copied" | "error">(null);
     a.click();
   }
 
-async function copyText() {
-  await navigator.clipboard.writeText(value);
-  setCopyStatus("text");
-  setTimeout(() => setCopyStatus(null), 1500);
-}
-
 async function copyFormatted() {
   try {
     if (!previewRef.current) return;
@@ -68,8 +62,6 @@ async function copyFormatted() {
     window.setTimeout(() => setCopyStatus(null), 1600);
   }
 }
-
-
 
 
   return (
@@ -132,13 +124,14 @@ async function copyFormatted() {
       fontSize: 12,
       background: "white",
       border: "1px solid #ccc",
-      color: "#2e7d32",
+      color: copyStatus === "copied" ? "#2e7d32" : "#b71c1c",
       whiteSpace: "nowrap",
     }}
   >
-    ✓ kopiert
+    {copyStatus === "copied" ? "✓ kopiert" : "Kopieren nicht möglich"}
   </div>
 )}
+
 
 </div>
 
@@ -148,18 +141,7 @@ async function copyFormatted() {
   <button onClick={exportSvg}>Export SVG</button>
 </div>
 
-{copyStatus && (
-  <div
-    style={{
-      marginTop: 8,
-      color: "#2e7d32",
-      fontSize: 14,
-      transition: "opacity 0.2s",
-    }}
-  >
-    ✓ {copyStatus === "text" ? "Text kopiert" : "Formatiert kopiert"}
-  </div>
-)}
+
 
 
     <div
